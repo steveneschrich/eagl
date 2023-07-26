@@ -179,20 +179,25 @@ ggplot2::ggplot(mixture, ggplot2::aes(x=rn, y = Projection, col=Measure)) +
   # Add vlines at the max rn for the group
   ggplot2::geom_vline(xintercept=100) +
   # Add coordinates (median rn), y=-10, text = max_group, color = from before.
-  ggplot2::geom_text(data=data.frame(x=c(100,200,300), text=c("A","B","C")), ggplot2::aes(x=x,y=0,label=text,col="green"))
-
+  ggplot2::geom_text(
+    data = data.frame(
+      x = c(100, 200, 300),
+      text = c("A", "B", "C")
+    ),
+    ggplot2::aes(x = x, y = 0, label = text, col = "green")
+  )
 }
 
 
 # Reference barplot. I think that the other plot (non-labelled)
 ecla_barplot_reference <- function() {
-  plot_reference_columns(
+  columnplot_reference(
     eagl::ecla |> dplyr::filter(isReference),
-    projections = paste0("Q",1:7),
+    projections = paste0("Q", 1:7),
     SuperPopulation = SuperPopulation, # SuperPopulation column
     Population = Population, # Population column
     population_label = "1KG Population"
-    )
+  )
 }
 
 

@@ -2,3 +2,5 @@
 ^renv\.lock$
 ^eagl\.Rproj$
 ^\.Rproj\.user$
+data-raw
+^LICENSE\.md$

@@ -4,7 +4,7 @@
 #' @export
 #'
 #' @examples
-theme_scatter <- function() {
+theme_scatterplot <- function() {
 
 
   ggplot2::`%+replace%`(
@@ -19,6 +19,17 @@ theme_scatter <- function() {
   )
 }
 
-theme_column <- function() {
+theme_columnplot <- function() {
 
+  ggplot2::`%+replace%`(
+    ggplot2::theme_minimal(),
+    ggplot2::theme(
+      axis.ticks.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      panel.background = ggplot2::element_blank(),
+      axis.title.x = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_text(size=18)
+    )
+  )
 }

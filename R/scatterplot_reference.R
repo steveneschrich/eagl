@@ -190,7 +190,7 @@ scatterplot_reference <- function(
 
   # Now apply the default theme for these plots.
   p <- p +
-    theme_scatter()
+    theme_scatterplot()
 
   p
 }

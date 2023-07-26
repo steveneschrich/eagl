@@ -101,14 +101,7 @@ columnplot_reference <- function(
 
     # Style now
     p <- p +
-      ggplot2::theme(
-        axis.ticks.y = ggplot2::element_blank(),
-        axis.text.y = ggplot2::element_blank(),
-        axis.ticks.x = ggplot2::element_blank(),
-        panel.background = ggplot2::element_blank(),
-        axis.title.x = ggplot2::element_blank(),
-        axis.text.x = ggplot2::element_text(size=18)
-      )
+      theme_columnplot()
 
   p
 }

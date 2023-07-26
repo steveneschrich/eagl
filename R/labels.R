@@ -41,7 +41,7 @@ create_tooltips <- function(data, header = NULL, include = NULL,
   labelled_variables <- purrr::imap(data, \(x, name) {
     if ( !is.null(labelled::label_attribute(x)) )
       name <- labelled::label_attribute(x)
-    paste0(name,": ",format(x,scientific = FALSE))
+    paste0(name,": ",format(x,scientific = FALSE, justify = "none"))
   })
 
   # Add header information (if it exists) to the list of things
