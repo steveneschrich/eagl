@@ -3,6 +3,7 @@
 export(columnplot_reference)
 export(create_sample_names)
 export(create_tooltips)
+export(ecla_tsne_plot)
 export(plot_interactive)
 export(pull)
 export(scatterplot_overlay)

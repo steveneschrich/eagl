@@ -1,6 +1,18 @@
+#' Estimated Cell Line Ancestry Data
+#' @name ecla
+#' @description Data used for the Cancer Research paper on estimated cell line
+#' ancestry.
+"ecla"
+
 # ecla
 # Recreate the figures in the ECLA (http://ecla.moffitt.org) application
 
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ecla_tsne_plot <- function() {
 
 
