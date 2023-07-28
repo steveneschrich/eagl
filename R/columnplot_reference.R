@@ -17,10 +17,48 @@ columnplot_reference <- function(
     projections = paste0("Q",1:7), # Names of projections in the data
     SuperPopulation = SuperPopulation, # SuperPopulation column
     Population = Population, # Population column
-    population_label = "1KG Population"
+    population_label = "1KG Population",
+    colors = NULL,
+    # Tooltips:
+    # header is a glue string from the data to use as the tooltip label
+    tooltip_header = NULL,
+    # include is a list of variables to include within the tooltip
+    tooltip_include = NULL,
+    tooltip_digits = getOption("digits")
 ) {
 
   projections <- broom.helpers::.select_to_varnames(projections, data = data)
+
+  tooltip_include <- broom.helpers::.select_to_varnames(
+    select={{ tooltip_include }},
+    data=data
+  )
+  # If no include options were given (for tooltips), construct
+  # from the x, y parameters provided for the function.
+  if ( is.null(tooltip_include) ) {
+    tooltip_include <- broom.helpers::.select_to_varnames(
+      c({{ projections }}),
+      data = data
+    )
+  }
+  # Summarize projections by Population and then create tooltips to add
+  # for everyone.
+  ttd <- data |>
+    dplyr::group_by({{ Population }}) |>
+    dplyr::summarize(
+      dplyr::across(dplyr::all_of(projections), mean),
+      dplyr::across(dplyr::everything(), \(.x) {head(.x,n=1)})
+    )
+  tooltips <- dplyr::bind_cols(
+    Population = dplyr::pull(ttd,{{ Population }}),
+    tooltips = create_tooltips(
+      data = ttd,
+      header = tooltip_header,
+      include = tooltip_include,
+      digits = tooltip_digits
+    )
+  )
+
   # Calculate the max group (of the projections) and store the
   # max value for that group for sorting later.
   data <- data |>
@@ -29,7 +67,8 @@ columnplot_reference <- function(
       max_group_val = max(dplyr::pick(dplyr::all_of(projections))),
       max_group = projections[which.max(dplyr::pick(dplyr::all_of(projections)))]
     ) |>
-    dplyr::ungroup()
+    dplyr::ungroup() |>
+    dplyr::left_join(tooltips, by = dplyr::join_by({{ Population }}))
 
   # Now we arrange the data by Population, then by increasing value of the
   # max.
@@ -50,9 +89,15 @@ columnplot_reference <- function(
   #plyr::mutate(max_rn = max(rn)) |>
 
 
-  p <- ggplot2::ggplot(data, ggplot2::aes(x=rn, y = Projection, col=Measure)) +
-    ggplot2::geom_col() +
-    ggplot2::scale_color_manual(values = eagl::color_maps$ecla_q)
+  p <- ggplot2::ggplot(data, ggplot2::aes(x=rn, y = Projection, col=Measure, tooltip = tooltips)) +
+    ggiraph::geom_col_interactive()
+    #ggplot2::geom_col()
+
+  if ( !is.null(colors) ) {
+    p <- p +
+      ggplot2::scale_color_manual(values = colors)
+
+  }
 
   # There are two more things to plot: the lines and the labels.
   labels <- data |>
@@ -92,7 +137,7 @@ columnplot_reference <- function(
       ) +
     ggplot2::scale_x_continuous(
       breaks = super_labels$group_center,
-      labels=super_labels$SuperPopulation,
+      labels=dplyr::pull(super_labels,{{ SuperPopulation }}),
       expand = c(0,0)
     ) +
       ggplot2::ylab(population_label)

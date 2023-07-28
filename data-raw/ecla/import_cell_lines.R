@@ -35,5 +35,5 @@ dataset <- tibble::tribble(
   1, "ecla", "Estimated Cell Line Ancestry"
 )
 
-usethis::use_data(ecla, overwrite = TRUE, version = 3)
-usethis::use_data(dataset, overwrite=TRUE, version=3)
+usethis::use_data(ecla, internal = FALSE, overwrite = TRUE)
+usethis::use_data(dataset, internal = FALSE, overwrite=TRUE)
