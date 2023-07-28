@@ -38,7 +38,7 @@ ecla_tsne_plot <- function() {
 }
 
 ecla_tsne_plot_q1 <- function() {
-  plot_reference(
+  scatterplot_reference(
     data = eagl::ecla |> dplyr::filter(isReference),
     x = X1, y = X2,
     tooltip_header = "1KG - {SuperPopulation} - {Population} - {FID}",
@@ -48,7 +48,7 @@ ecla_tsne_plot_q1 <- function() {
     color_map = eagl::color_maps$ecla_q[1]
   ) |>
 
-    plot_overlay(data = eagl::ecla |> dplyr::filter(!isReference),
+    scatterplot_overlay(data = eagl::ecla |> dplyr::filter(!isReference),
                  x = X1, y = X2,
                  color_by = Q1,
                  tooltip_header = "Cell Line: {cLine_ID}",
@@ -208,8 +208,13 @@ ecla_barplot_reference <- function() {
     projections = paste0("Q", 1:7),
     SuperPopulation = SuperPopulation, # SuperPopulation column
     Population = Population, # Population column
-    population_label = "1KG Population"
-  )
+    population_label = "1KG Population",
+    colors = eagl::color_maps$ecla_q,
+    tooltip_header = "{SuperPopulation}: {`SuperPopulation Description`}",
+    tooltip_include = c(Population, `Population Description`, Q1, Q2, Q3, Q4, Q5, Q6, Q7)
+  ) |>
+    plot_interactive()
+
 }
 
 

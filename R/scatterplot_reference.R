@@ -147,6 +147,7 @@ scatterplot_reference <- function(
   # use ggiraph although you can use it as a static plot.
   p <- p +
     ggiraph::geom_point_interactive(
+    #ggplot2::geom_point(
       data = gdf,
       mapping = ggplot2::aes(
         x={{ x }},y= {{ y }},
@@ -179,6 +180,7 @@ scatterplot_reference <- function(
   # Add a layer next that is the reference labels, using ggrepel.
   p <- p +
     ggiraph::geom_text_repel_interactive(
+    #ggrepel::geom_text_repel(
       data = label_data,
       ggplot2::aes(
         x= {{ x }},y= {{ y }},

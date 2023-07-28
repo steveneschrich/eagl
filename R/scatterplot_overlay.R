@@ -97,6 +97,7 @@ scatterplot_overlay <- function(p, data, x = NULL, y = NULL,
   p <- p +
     do.call(
       ggiraph::geom_point_interactive,
+      #ggplot2::geom_point,
       plot_args
     )
 
