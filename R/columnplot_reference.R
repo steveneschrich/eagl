@@ -29,6 +29,7 @@ columnplot_reference <- function(
 
   projections <- broom.helpers::.select_to_varnames(projections, data = data)
 
+  Population <- rlang::enquo(Population)
   tooltip_include <- broom.helpers::.select_to_varnames(
     select={{ tooltip_include }},
     data=data
@@ -41,6 +42,21 @@ columnplot_reference <- function(
       data = data
     )
   }
+
+  # Calculate the max group (of the projections) and store the
+  # max value for that group for sorting later.
+  data <- data |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      max_group_val = max(dplyr::pick(dplyr::all_of(projections))),
+      max_group = projections[which.max(dplyr::pick(dplyr::all_of(projections)))]
+    ) |>
+    dplyr::ungroup()
+
+  if ( rlang::quo_is_null(Population)) {
+    Population <- rlang::sym("max_group")
+  }
+
   # Summarize projections by Population and then create tooltips to add
   # for everyone.
   ttd <- data |>
@@ -59,15 +75,8 @@ columnplot_reference <- function(
     )
   )
 
-  # Calculate the max group (of the projections) and store the
-  # max value for that group for sorting later.
+
   data <- data |>
-    dplyr::rowwise() |>
-    dplyr::mutate(
-      max_group_val = max(dplyr::pick(dplyr::all_of(projections))),
-      max_group = projections[which.max(dplyr::pick(dplyr::all_of(projections)))]
-    ) |>
-    dplyr::ungroup() |>
     dplyr::left_join(tooltips, by = dplyr::join_by({{ Population }}))
 
   # Now we arrange the data by Population, then by increasing value of the
