@@ -50,7 +50,7 @@ columnplot_reference <- function(
       dplyr::across(dplyr::everything(), \(.x) {head(.x,n=1)})
     )
   tooltips <- dplyr::bind_cols(
-    Population = dplyr::pull(ttd,{{ Population }}),
+    {{ Population }} := dplyr::pull(ttd,{{ Population }}),
     tooltips = create_tooltips(
       data = ttd,
       header = tooltip_header,

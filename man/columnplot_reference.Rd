@@ -9,7 +9,11 @@ columnplot_reference(
   projections = paste0("Q", 1:7),
   SuperPopulation = SuperPopulation,
   Population = Population,
-  population_label = "1KG Population"
+  population_label = "1KG Population",
+  colors = NULL,
+  tooltip_header = NULL,
+  tooltip_include = NULL,
+  tooltip_digits = getOption("digits")
 )
 }
 \arguments{
