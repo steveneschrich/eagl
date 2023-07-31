@@ -30,6 +30,12 @@ columnplot_reference <- function(
   projections <- broom.helpers::.select_to_varnames(projections, data = data)
 
   Population <- rlang::enquo(Population)
+  SuperPopulation <- rlang::enquo(SuperPopulation)
+
+  # We can't support both Population and SuperPopulation as NULL
+  stopifnot("Error: You cannot leave both Population and SuperPopulation parameters NULL!" =
+              !(rlang::quo_is_null(Population) && rlang::quo_is_null(SuperPopulation)))
+
   tooltip_include <- broom.helpers::.select_to_varnames(
     select={{ tooltip_include }},
     data=data
@@ -53,10 +59,13 @@ columnplot_reference <- function(
     ) |>
     dplyr::ungroup()
 
+  # This allows us to group by the Q value if the Population is empty.
   if ( rlang::quo_is_null(Population)) {
     Population <- rlang::sym("max_group")
   }
-
+  if ( rlang::quo_is_null(SuperPopulation)) {
+    SuperPopulation <- rlang::sym("max_group")
+  }
   # Summarize projections by Population and then create tooltips to add
   # for everyone.
   ttd <- data |>
@@ -94,8 +103,6 @@ columnplot_reference <- function(
                         names_to="Measure",values_to="Projection") |>
     # NB: Should we still do this? Need to check
     dplyr::mutate(Measure = factor(Measure, levels = rev(projections)))
-
-  #plyr::mutate(max_rn = max(rn)) |>
 
 
   p <- ggplot2::ggplot(data, ggplot2::aes(x=rn, y = Projection, col=Measure, tooltip = tooltips)) +
